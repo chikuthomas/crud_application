@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+//for http calls
 import axios from 'axios';
+import Navbar from '../components/navbar';
 
 class AddProduct extends Component {
 
@@ -43,21 +45,23 @@ class AddProduct extends Component {
     }
     render() {
 
+      
         return (
 
-
-            <div className='container'>
+<>  <Navbar />
+           
+            <div className='container mt-3'>
 
                 <div className='row justify-content-center'>
                     <div className='col-md-6 '>
                         <div className='card'>
-                            <div className='card-header'>
-                                <h4>
+                            <div className='card-header bg-dark text-white' data-bs-theme="dark" >
+                                <h5>
                                     Add Product
                                     <Link to={'/'} className="btn btn-primary btn-small float-end">
                                         Previous
                                     </Link>
-                                </h4>
+                                </h5>
 
                             </div>
                             <div className='card-body'>
@@ -88,7 +92,7 @@ class AddProduct extends Component {
                     </div>
                 </div>
 
-            </div>
+            </div></>
         );
     }
 }

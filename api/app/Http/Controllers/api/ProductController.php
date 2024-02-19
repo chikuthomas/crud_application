@@ -11,6 +11,23 @@ use App\Models\Products;
 
 class ProductController extends Controller
 {
+
+    
+    public function index(){
+
+        $products =Products::all();
+        return response()->json([
+
+            'status'=>200,
+            'products'=>$products,
+        ]);
+
+        
+
+    }
+
+
+
     public function store(Request $request){
 
         $product = new Products;
