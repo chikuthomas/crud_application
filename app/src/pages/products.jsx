@@ -1,9 +1,10 @@
-import React, { Component,useEffect } from 'react';
+import React, { Component, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/navbar';
 //for http calls
 import axios from 'axios';
 import Footer from '../components/footer';
+import Swal from 'sweetalert'
 
 class Products extends Component {
 
@@ -15,8 +16,9 @@ class Products extends Component {
     }
 
 
-   
 
+
+    //retrieving all adata on the products page function
     async componentDidMount() {
 
         const res = await axios.get('http://localhost:8000/api/products');
@@ -32,6 +34,29 @@ class Products extends Component {
                 loading: false,
 
             });
+        }
+    }
+
+    //delete product function
+    deleteProduct = async (e, id) => {
+
+        //to make sure the page doesnt reload when deleting but rather show Deleting... text
+
+        const thisClickedProductDelete = e.currentTarget;
+        thisClickedProductDelete.innerText= "Deleting";
+
+        const res = await axios.delete(`http://localhost:8000/api/delete-product/${id}`);
+
+
+        if (res.data.status === 200) {
+
+            thisClickedProductDelete.closest('tr').remove();
+        
+            Swal({
+                title: "Deleted!",
+                text: res.data.message,
+                icon: "success"
+              });
         }
     }
 
@@ -66,10 +91,10 @@ class Products extends Component {
 
                                 <Link to={`edit-product/${item.id}`} className="btn btn-success btn-sm">Edit</Link>
 
-                              
+
                             </td>
                             <td>
-                            <button className="btn btn-danger btn-sm">Delete</button>
+                                <button className="btn btn-danger btn-sm" onClick={(e) => this.deleteProduct(e, item.id)}>Delete</button>
                             </td>
                         </tr>
                     );
@@ -101,7 +126,7 @@ class Products extends Component {
                                     <table className="table table-striped">
                                         <thead>
                                             <tr>
-                                            <th>ID</th>
+                                                <th>ID</th>
                                                 <th>Name</th>
                                                 <th>Price</th>
                                                 <th>Quantity</th>
@@ -121,7 +146,7 @@ class Products extends Component {
 
                 </div>
                 <Footer />
-                </>
+            </>
         );
     }
 }

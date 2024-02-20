@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 //for http calls
 import axios from 'axios';
 import Navbar from '../components/navbar';
+import Swal from 'sweetalert'
 
 class AddProduct extends Component {
 
@@ -28,18 +29,28 @@ class AddProduct extends Component {
     saveProduct = async (e) => {
 
         e.preventDefault();
-
+        document.getElementById('saveBtn').disabled=true;
+        document.getElementById('saveBtn').innerText="saving..";
         const res = await axios.post('http://localhost:8000/api/add-product', this.state);
 
         if (res.data.status === 200) {
 
-            console.log(res.data.message);
+           
+            Swal({
+                title: "Success!",
+                text: res.data.message,
+                icon: "success"
+              });
+
             this.setState({
                 name: '',
                 price: '',
                 qty: '',
                 image: '',
             });
+
+        document.getElementById('saveBtn').disabled=false;
+        document.getElementById('saveBtn').innerText="save";
         }
 
     }
@@ -84,7 +95,7 @@ class AddProduct extends Component {
                                         <input type="text" name='image' id='image' autoComplete='false' onChange={this.handleInput} value={this.state.image} className='form-control' />
                                     </div>
                                     <div className='form-group mb-3'>
-                                        <button type='submit' className='btn btn-primary'>Save</button>
+                                        <button type='submit' className='btn btn-primary' id='saveBtn'>Save</button>
                                     </div>
                                 </form>
                             </div>

@@ -12,6 +12,8 @@ Route::get('/edit-product/{id}',[ProductController::class,'edit']);
 
 Route::put('/update-product/{id}',[ProductController::class,'update']);
 
+Route::delete('/delete-product/{id}',[ProductController::class,'destroy']);
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });

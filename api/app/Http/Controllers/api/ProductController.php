@@ -22,8 +22,6 @@ class ProductController extends Controller
             'products'=>$products,
         ]);
 
-        
-
     }
 
 
@@ -37,7 +35,6 @@ class ProductController extends Controller
         ]);
 
     }
-
 
 
     public function store(Request $request){
@@ -69,6 +66,18 @@ class ProductController extends Controller
 
             'status'=>200,
             'message'=>'Product Updated Successfully',
+        ]);
+    }
+
+    public function destroy($id){
+
+        $product = Products::find($id);
+        $product->delete();
+
+        return response()->json([
+
+            'status'=>200,
+            'message'=>'Product Deleted Successfully',
         ]);
     }
 }

@@ -3,6 +3,7 @@ import { Link, useParams, useRoutes } from 'react-router-dom';
 //for http calls
 import axios from 'axios';
 import Navbar from '../components/navbar';
+import Swal from 'sweetalert'
 
 
 // Functional component to fetch and pass the id
@@ -67,6 +68,8 @@ class EditProduct extends Component {
 
         e.preventDefault();
 
+        document.getElementById('updateBtn').disabled=true;
+        document.getElementById('updateBtn').innerText="updating..";
         //calling the id from route
         const prod_id =  this.props.id;
 
@@ -74,7 +77,14 @@ class EditProduct extends Component {
 
         if (res.data.status === 200) {
 
-            console.log(res.data.message);
+            Swal({
+                title: "Updated!",
+                text: res.data.message,
+                icon: "success"
+              });
+
+              document.getElementById('updateBtn').disabled=false;
+              document.getElementById('updateBtn').innerText="update";
            
         }
 
@@ -124,7 +134,7 @@ class EditProduct extends Component {
                                             <input type="text" name='image' id='image' autoComplete='false' onChange={this.handleInput} value={this.state.image} className='form-control' />
                                         </div>
                                         <div className='form-group mb-3'>
-                                            <button type='submit' className='btn btn-primary'>Update</button>
+                                            <button type='submit' className='btn btn-primary' id='updateBtn'>Update</button>
                                         </div>
                                     </form>
                                 </div>
