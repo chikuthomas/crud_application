@@ -1,7 +1,9 @@
 import { React } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Items from './pages/products';
-import AddItem from './pages/add_product';
+import EditProduct from './pages/edit_product';
+import AddProduct from './pages/add_product';
+import Products from './pages/products';
+
 
 function App() {
 
@@ -10,8 +12,9 @@ function App() {
 
     <Router>
       <Routes>
-        <Route exact path='/' Component={Items} />
-        <Route  path='/add-product' Component={AddItem} />
+        <Route exact path='/' Component={Products} />
+        <Route  path='/add-product' Component={AddProduct} />
+        <Route  path='/edit-product/:id' element={<EditProduct />}  />
       </Routes>
     </Router>
 

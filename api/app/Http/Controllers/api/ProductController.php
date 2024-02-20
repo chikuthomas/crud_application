@@ -27,6 +27,18 @@ class ProductController extends Controller
     }
 
 
+    public function edit($id){
+
+        $product =Products::find($id);
+        return response()->json([
+
+            'status'=>200,
+            'product'=>$product,
+        ]);
+
+    }
+
+
 
     public function store(Request $request){
 
@@ -41,6 +53,22 @@ class ProductController extends Controller
 
             'status'=>200,
             'message'=>'Product Added Successfully',
+        ]);
+    }
+
+    public function update(Request $request,$id){
+
+        $product = Products::find($id);
+        $product->name = $request->input('name') ;
+        $product->price = $request->input('price') ;
+        $product->qty = $request->input('qty') ;
+        $product->image = $request->input('image') ;
+        $product->update();
+
+        return response()->json([
+
+            'status'=>200,
+            'message'=>'Product Updated Successfully',
         ]);
     }
 }

@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component,useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/navbar';
 //for http calls
 import axios from 'axios';
+import Footer from '../components/footer';
 
 class Products extends Component {
 
@@ -12,6 +13,9 @@ class Products extends Component {
         loading: true,
 
     }
+
+
+   
 
     async componentDidMount() {
 
@@ -57,9 +61,10 @@ class Products extends Component {
                             <td>{item.name}</td>
                             <td>{item.price}</td>
                             <td>{item.qty}</td>
+                            <td>{item.image}</td>
                             <td>
 
-                                <Link to={'edit-product/${item.id}'} className="btn btn-success btn-sm">Edit</Link>
+                                <Link to={`edit-product/${item.id}`} className="btn btn-success btn-sm">Edit</Link>
 
                               
                             </td>
@@ -78,7 +83,7 @@ class Products extends Component {
                 <div className='container mt-3'>
 
                     <div className='row justify-content-center'>
-                        <div className='col-md-8
+                        <div className='col-md-10
                     '>
                             <div className='card'>
                                 <div className='card-header bg-dark text-white' data-bs-theme="dark">
@@ -93,9 +98,10 @@ class Products extends Component {
                                 </div>
                                 <div className='card-body'>
 
-                                    <table className="table table-stiped">
+                                    <table className="table table-striped">
                                         <thead>
                                             <tr>
+                                            <th>ID</th>
                                                 <th>Name</th>
                                                 <th>Price</th>
                                                 <th>Quantity</th>
@@ -113,7 +119,9 @@ class Products extends Component {
                         </div>
                     </div>
 
-                </div></>
+                </div>
+                <Footer />
+                </>
         );
     }
 }
