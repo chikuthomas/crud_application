@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from 'react';
-import { Link, useParams, useRoutes } from 'react-router-dom';
+import { Link, useParams, useRoutes, useNavigate } from 'react-router-dom';
 //for http calls
 import axios from 'axios';
 import Navbar from '../components/navbar';
@@ -10,10 +10,23 @@ import Swal from 'sweetalert'
 function getID() {
     const { id } = useParams();
     return id;
-  }
+}
+
+//this function is used to use hooks inside class component 
+function navigateTo() {
+    const navigate = useNavigate();//this is a hook
+    return navigate;
+}
 
 
-  
+// this function links the getID function to th editProduct function
+function EditProductPage() {
+    const id = getID(); // Call Update function to get the id
+    const navigate = navigateTo(); // Call Update function to get the id
+    return <EditProduct id={id} navigate={navigate} />; // Pass id to EditProduct as a prop
+}
+
+
 
 class EditProduct extends Component {
 
@@ -24,6 +37,7 @@ class EditProduct extends Component {
         price: '',
         qty: '',
         image: '',
+        error_list: [],
     }
 
 
@@ -35,15 +49,17 @@ class EditProduct extends Component {
         });
     }
 
-  
+
 
 
     async componentDidMount() {
 
-       
-         //calling the id from route
-        const prod_id =  this.props.id;
-       
+
+        //calling the id from route
+        const prod_id = this.props.id;
+
+        // Get the navigate function from the props
+        const navigate = this.props.navigate;
 
         const res = await axios.get(`http://localhost:8000/api/edit-product/${prod_id}`);
 
@@ -51,6 +67,7 @@ class EditProduct extends Component {
 
         //if data is fetched attach to input field
         if (res.data.status === 200) {
+
 
             this.setState({
 
@@ -61,6 +78,21 @@ class EditProduct extends Component {
 
             });
         }
+
+        else if (res.data.status === 404) {
+
+            Swal({
+                title: "Warning!",
+                text: res.data.message,
+                icon: "warning"
+            });
+
+
+            navigate('/'); // Navigate to the homepage if no such id is found
+
+
+
+        }
     }
 
     //will call the api for storing products here
@@ -68,10 +100,11 @@ class EditProduct extends Component {
 
         e.preventDefault();
 
-        document.getElementById('updateBtn').disabled=true;
-        document.getElementById('updateBtn').innerText="updating..";
+        document.getElementById('updateBtn').disabled = true;
+        document.getElementById('updateBtn').innerText = "updating..";
         //calling the id from route
-        const prod_id =  this.props.id;
+        const prod_id = this.props.id;
+
 
         const res = await axios.put(`http://localhost:8000/api/update-product/${prod_id}`, this.state);
 
@@ -81,22 +114,34 @@ class EditProduct extends Component {
                 title: "Updated!",
                 text: res.data.message,
                 icon: "success"
-              });
+            });
 
-              document.getElementById('updateBtn').disabled=false;
-              document.getElementById('updateBtn').innerText="update";
-           
+            document.getElementById('updateBtn').disabled = false;
+            document.getElementById('updateBtn').innerText = "update";
+
+        } else {
+
+            
+            this.setState({
+                error_list: res.data.validate_err,
+            });
+
+            document.getElementById('updateBtn').disabled = false;
+            document.getElementById('updateBtn').innerText = "update";
         }
+
+
 
     }
 
     render() {
 
-  
+
+
 
 
         return (
-            
+
 
             <>  <Navbar />
 
@@ -107,7 +152,7 @@ class EditProduct extends Component {
                             <div className='card'>
                                 <div className='card-header bg-dark text-white' data-bs-theme="dark" >
                                     <h5>
-                                        Edit Product 
+                                        Edit Product
                                         <Link to={'/'} className="btn btn-primary btn-small float-end">
                                             Previous
                                         </Link>
@@ -120,18 +165,22 @@ class EditProduct extends Component {
                                         <div className='form-group mb-3'>
                                             <label htmlFor="name">Name</label>
                                             <input type="text" name='name' id='name' autoComplete='false' onChange={this.handleInput} value={this.state.name} className='form-control' />
+                                            <span className='text-danger'>{this.state.error_list.name}</span>
                                         </div>
                                         <div className='form-group mb-3'>
                                             <label htmlFor="price">Price</label>
                                             <input type="number" name='price' id='price' autoComplete='false' onChange={this.handleInput} value={this.state.price} className='form-control' />
+                                            <span className='text-danger'>{this.state.error_list.price}</span>
                                         </div>
                                         <div className='form-group mb-3'>
                                             <label htmlFor="qty">Quantity</label>
                                             <input type="number" name='qty' id='qty' autoComplete='false' onChange={this.handleInput} value={this.state.qty} className='form-control' />
+                                            <span className='text-danger'>{this.state.error_list.qty}</span>
                                         </div>
                                         <div className='form-group mb-3'>
                                             <label htmlFor="image">Image</label>
                                             <input type="text" name='image' id='image' autoComplete='false' onChange={this.handleInput} value={this.state.image} className='form-control' />
+                                            <span className='text-danger'>{this.state.error_list.image}</span>
                                         </div>
                                         <div className='form-group mb-3'>
                                             <button type='submit' className='btn btn-primary' id='updateBtn'>Update</button>
@@ -148,10 +197,5 @@ class EditProduct extends Component {
 }
 
 
-// this function links the getID function to th editProduct function
-function EditProductPage() {
-    const id = getID(); // Call Update function to get the id
-    return <EditProduct id={id} />; // Pass id to EditProduct as a prop
-  }
-  
+
 export default EditProductPage;
