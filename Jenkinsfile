@@ -30,7 +30,7 @@ pipeline {
                     // SSH into the Docker server and spin up the container
                     sshagent(['ssh-credentials-id']) {
                         sh """
-                        ssh -o StrictHostKeyChecking=no user@10.140.240.51 << EOF
+                        ssh -o StrictHostKeyChecking=no ictadmin@10.140.240.51 << EOF
                             docker stop myapp || true
                             docker rm myapp || true
                             docker run -d --name myapp -p 80:80 ${DOCKER_IMAGE}
