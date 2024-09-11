@@ -27,7 +27,7 @@ pipeline {
             steps {
                 script {
                     // Use SSH credentials to connect to the Docker server
-                    sshagent(['correct-credentials-id']) { // Replace 'correct-credentials-id' with your actual credential ID
+                    sshagent(['48197f9f-d1d9-47ce-94cc-cb4a20f5075d']) { // Replace 'correct-credentials-id' with your actual credential ID
                         sh """
                         ssh -o StrictHostKeyChecking=no ictadmin@10.140.240.51 << EOF
                             docker stop myapp || true
