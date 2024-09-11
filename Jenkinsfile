@@ -14,7 +14,7 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/chikuthomas/crud_application.git'
             }
         }
-stages {
+    stages {
         stage('Test SSH') {
             steps {
                 sshagent(['48197f9f-d1d9-47ce-94cc-cb4a20f5075d']) {
@@ -22,7 +22,7 @@ stages {
                 }
             }
         }
-    }
+        }
         stage('Build Docker Image') {
             steps {
                 script {
