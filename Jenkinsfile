@@ -14,7 +14,6 @@ pipeline {
                     
                     // Use sshagent with the stored Jenkins credentials
                     sshagent (credentials: ['48197f9f-d1d9-47ce-94cc-cb4a20f5075d']) {
-                        // Add verbose output to see SSH debug information
                         sh """
                         ssh -v -o StrictHostKeyChecking=no ${DOCKER_USER}@${DOCKER_SERVER_IP} "echo 'SSH connection successful'"
                         """
