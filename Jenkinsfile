@@ -15,16 +15,7 @@ pipeline {
             }
         }
 
-        stage('Test SSH') {
-            steps {
-                sshagent(['48197f9f-d1d9-47ce-94cc-cb4a20f5075d']) {
-                    // Test SSH by running a simple command (e.g., 'hostname')
-                    sh 'ssh -o StrictHostKeyChecking=no ictadmin@10.140.240.51 hostname'
-                    echo "SSH successful"
-                }
-            }
-        }
-
+       
         stage('Build Docker Image') {
             steps {
                 script {
