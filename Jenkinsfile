@@ -2,32 +2,26 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_SERVER_IP = '10.140.240.51'
+        DOCKER_HOST = 'tcp://10.140.240.51:2375' // Docker server IP
+        DOCKER_IMAGE = 'myapp:latest'
     }
 
     stages {
-        stage('Test SSH Connection') {
+        stage('Deploy to Docker Server') {
             steps {
                 script {
-                    echo 'Testing SSH connection to Docker server...'
-                    
-                    // Use withCredentials to inject username and password
-                    withCredentials([usernamePassword(credentialsId: '48197f9f-d1d9-47ce-94cc-cb4a20f5075d', usernameVariable: 'ictadmin', passwordVariable: 'malawi.2020')]) {
+                    // Use SSH credentials to connect to the Docker server
+                    sshagent(['48197f9f-d1d9-47ce-94cc-cb4a20f5075d']) { // Replace 'docker-server-ssh' with your actual credential ID
                         sh """
-                        sshpass -p "${DOCKER_PASSWORD}" ssh -o StrictHostKeyChecking=no ${DOCKER_USER}@${DOCKER_SERVER_IP} "echo 'SSH connection successful'"
+                        ssh -o StrictHostKeyChecking=no ictadmin@10.140.240.51 << EOF
+                            docker stop myapp || true
+                            docker rm myapp || true
+                            docker run -d --name myapp -p 80:80 ${DOCKER_IMAGE}
+                        EOF
                         """
                     }
                 }
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'SSH connection to Docker server succeeded.'
-        }
-        failure {
-            echo 'Failed to SSH into Docker server.'
         }
     }
 }
