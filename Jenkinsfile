@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_HOST = 'tcp://10.140.240.51:2375' // Docker server IP
         DOCKER_IMAGE = 'myapp:latest'
-        REGISTRY_CREDENTIALS = credentials('docker-credentials') // Jenkins credentials for DockerHub (if pushing to DockerHub)
+       // REGISTRY_CREDENTIALS = credentials('docker-credentials') // Jenkins credentials for DockerHub (if pushing to DockerHub)
     }
 
     stages {
