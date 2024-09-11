@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_HOST = 'tcp://10.140.240.51:2375' // Docker server IP
         DOCKER_IMAGE = 'myapp:latest'
-       // REGISTRY_CREDENTIALS = credentials('docker-credentials') // Jenkins credentials for DockerHub (if pushing to DockerHub)
+        // REGISTRY_CREDENTIALS = credentials('docker-credentials') // Jenkins credentials for DockerHub (if pushing to DockerHub)
     }
 
     stages {
@@ -14,15 +14,16 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/chikuthomas/crud_application.git'
             }
         }
-    stages {
+
         stage('Test SSH') {
             steps {
                 sshagent(['48197f9f-d1d9-47ce-94cc-cb4a20f5075d']) {
-                    sh 'ssh -o StrictHostKeyChecking=no ictadmin@10.140.240.51 bt00sfttest101'
+                    // Test SSH by running a simple command (e.g., 'hostname')
+                    sh 'ssh -o StrictHostKeyChecking=no ictadmin@10.140.240.51 hostname'
                 }
             }
         }
-        }
+
         stage('Build Docker Image') {
             steps {
                 script {
@@ -49,7 +50,7 @@ pipeline {
             }
         }
     }
-    
+
     post {
         always {
             // Clean up any local Docker resources (optional)
