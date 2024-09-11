@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HOST = 'tcp://10.140.240.51:2375' // Docker server IP
+        DOCKER_HOST = '10.140.240.51' // Docker server IP
         DOCKER_IMAGE = 'myapp:latest'
     }
 
