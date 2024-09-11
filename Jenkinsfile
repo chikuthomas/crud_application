@@ -28,7 +28,7 @@ pipeline {
             steps {
                 script {
                     // SSH into the Docker server and spin up the container
-                    sshagent(['ssh-credentials-id']) {
+                    sshagent(['48197f9f-d1d9-47ce-94cc-cb4a20f5075d']) {
                         sh """
                         ssh -o StrictHostKeyChecking=no ictadmin@10.140.240.51 << EOF
                             docker stop myapp || true
