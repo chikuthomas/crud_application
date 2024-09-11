@@ -2,40 +2,20 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HOST = 'tcp://10.140.240.51:2375' // Docker server IP
-        DOCKER_IMAGE = 'myapp:latest'
-        // REGISTRY_CREDENTIALS = credentials('docker-credentials') // Jenkins credentials for DockerHub (if pushing to DockerHub)
+        DOCKER_SERVER_IP = '10.140.240.51'
+        DOCKER_USER = 'ictadmin'
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                // Clone the repository from GitHub
-                git branch: 'main', url: 'https://github.com/chikuthomas/crud_application.git'
-            }
-        }
-
-       
-        stage('Build Docker Image') {
+        stage('Test SSH Connection') {
             steps {
                 script {
-                    // Build the Docker image
-                    sh 'docker build -t ${DOCKER_IMAGE} .'
-                }
-            }
-        }
-
-        stage('Deploy to Docker Server') {
-            steps {
-                script {
-                    // SSH into the Docker server and spin up the container
-                    sshagent(['48197f9f-d1d9-47ce-94cc-cb4a20f5075d']) {
+                    echo 'Testing SSH connection to Docker server...'
+                    
+                    // Use sshagent with the stored Jenkins credentials
+                    sshagent (credentials: ['48197f9f-d1d9-47ce-94cc-cb4a20f5075d']) {
                         sh """
-                        ssh -o StrictHostKeyChecking=no ictadmin@10.140.240.51 << EOF
-                            docker stop myapp || true
-                            docker rm myapp || true
-                            docker run -d --name myapp -p 80:80 ${DOCKER_IMAGE}
-                        EOF
+                        ssh -o StrictHostKeyChecking=no ${DOCKER_USER}@${DOCKER_SERVER_IP} "echo 'SSH connection successful'"
                         """
                     }
                 }
@@ -44,9 +24,11 @@ pipeline {
     }
 
     post {
-        always {
-            // Clean up any local Docker resources (optional)
-            sh 'docker rmi ${DOCKER_IMAGE}'
+        success {
+            echo 'SSH connection to Docker server succeeded.'
+        }
+        failure {
+            echo 'Failed to SSH into Docker server.'
         }
     }
 }
