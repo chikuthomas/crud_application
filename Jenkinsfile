@@ -7,6 +7,14 @@ pipeline {
     }
 
     stages {
+        stage('Check Environment Variables') {
+            steps {
+                script {
+                    echo "DOCKER_SERVER_IP: ${DOCKER_SERVER_IP}"
+                    echo "DOCKER_USER: ${DOCKER_USER}"
+                }
+            }
+        }
         stage('Test SSH Connection') {
             steps {
                 script {
@@ -14,7 +22,7 @@ pipeline {
                     
                     // Use sshagent with the stored Jenkins credentials
                     sshagent (credentials: ['ssh-ictadmin']) {
-                        bat """
+                        sh """
                         echo 'Attempting SSH connection...'
                         ssh -o StrictHostKeyChecking=no ${DOCKER_USER}@${DOCKER_SERVER_IP} "echo 'SSH connection successful'"
                         """
