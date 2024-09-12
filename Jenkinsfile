@@ -22,7 +22,7 @@ pipeline {
                     
                     // Use sshagent with the stored Jenkins credentials
                     sshagent (credentials: ['ssh-ictadmin']) {
-                        sh """
+                        bat """
                         echo 'Attempting SSH connection...'
                         ssh -o StrictHostKeyChecking=no ${DOCKER_USER}@${DOCKER_SERVER_IP} "echo 'SSH connection successful'"
                         """
