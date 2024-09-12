@@ -9,7 +9,7 @@ pipeline {
         stage('Use SSH') {
             steps {
                 script {
-                    sshagent(['your-ssh-key-id']) {
+                    sshagent([${ SSH_KEY]) {
                         bat '''
                             ssh ictadmin@10.140.240.51 "ls"
                         '''
