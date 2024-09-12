@@ -5,7 +5,7 @@ pipeline {
         stage('SSH to Linux Server') {
             steps {
                 sh '''
-                    ssh -i C:/Users/cthomas/.ssh/id_rsa -o StrictHostKeyChecking=no ictadmin@10.140.240.51 'hostname; uptime;'
+                    ssh -i /C:/Users/cthomas/.ssh/id_rsa -o StrictHostKeyChecking=no ictadmin@10.140.240.51 'hostname; uptime;'
                 '''
             }
         }
