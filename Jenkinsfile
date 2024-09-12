@@ -1,24 +1,30 @@
 pipeline {
     agent any
-    
-    environment {
-        SSH_KEY = credentials('ssh-ictadmin') // Jenkins Credentials ID for the SSH Key
-    }
 
     stages {
-        stage('Use SSH') {
+        stage('Use SSH with Credentials') {
             steps {
                 script {
-                    sshagent([${ SSH_KEY]) {
-                        bat '''
-                            ssh ictadmin@10.140.240.51 "ls"
-                        '''
-                    }
+                    echo 'Attempting to run SSH command...'
+
+                    def remote = [
+                        name: 'remote-server',
+                        host: '10.140.240.51',
+                        user: 'ictadmin',
+                        credentialsId: 'ssh-ictadmin', // Use the ID of your Jenkins credentials
+                        port: 22,
+                        allowAnyHosts: true
+                    ]
+
+                    // Run a command on the remote server using credentials
+                    sshCommand remote: remote, command: 'ls'
+
+                    echo 'SSH command executed successfully!'
                 }
             }
         }
     }
-    
+
     post {
         success {
             echo 'Pipeline completed successfully!'
