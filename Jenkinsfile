@@ -4,7 +4,9 @@ pipeline {
     stages {
         stage('Use SSH') {
             steps {
-                sh 'ssh -i "/c/Program Files/Jenkins/.ssh/id_rsa" ictadmin@10.140.240.51 "your-command"'
+              bat '''
+                ssh -i "C:\\Program Files\\Jenkins\\.ssh\\id_rsa"  ictadmin@10.140.240.51 "your-command"
+                '''
             }
         }
     }
