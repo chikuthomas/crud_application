@@ -1,7 +1,10 @@
 
 pipeline {
     agent any
-    
+
+    environment {
+    SSH_KEY = "C:\\Users\\cthomas\\.ssh\\id_rsa"
+}
     stages {
         stage('SSH to Linux Server') {
             steps {
