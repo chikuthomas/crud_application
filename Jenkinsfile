@@ -1,43 +1,30 @@
 pipeline {
     agent any
-
+    
     environment {
-        DOCKER_SERVER_IP = '10.140.240.51'
-        DOCKER_USER = 'ictadmin'
+        SSH_KEY = credentials('ssh-ictadmin') // Jenkins Credentials ID for the SSH Key
     }
 
     stages {
-        stage('Check Environment Variables') {
+        stage('Use SSH') {
             steps {
                 script {
-                    echo "DOCKER_SERVER_IP: ${DOCKER_SERVER_IP}"
-                    echo "DOCKER_USER: ${DOCKER_USER}"
-                }
-            }
-        }
-        stage('Test SSH Connection') {
-            steps {
-                script {
-                    echo 'Testing SSH connection to Docker server...'
-                    
-                    // Use sshagent with the stored Jenkins credentials
-                    sshagent (credentials: ['ssh-ictadmin']) {
-                        bat """
-                        echo 'Attempting SSH connection...'
-                        ssh -o StrictHostKeyChecking=no ${DOCKER_USER}@${DOCKER_SERVER_IP} "echo 'SSH connection successful'"
-                        """
+                    sshagent(['your-ssh-key-id']) {
+                        bat '''
+                            ssh ictadmin@10.140.240.51 "ls"
+                        '''
                     }
                 }
             }
         }
     }
-
+    
     post {
         success {
-            echo 'SSH connection to Docker server succeeded.'
+            echo 'Pipeline completed successfully!'
         }
         failure {
-            echo 'Failed to SSH into Docker server.'
+            echo 'Pipeline failed. Check the logs for more details.'
         }
     }
 }
