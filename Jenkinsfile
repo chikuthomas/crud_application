@@ -1,16 +1,18 @@
+
 pipeline {
     agent any
     
     stages {
         stage('SSH to Linux Server') {
             steps {
-                // Use the Jenkins SSH agent for the credentials you set up
-                sshagent(['ssh-ictadmin']) {
+                // Inject the SSH private key from Jenkins credentials store
+                withCredentials([sshUserPrivateKey(credentialsId: 'ssh-ictadmin', keyFileVariable: 'SSH_KEY')]) {
                     sh '''
-                        ssh -o StrictHostKeyChecking=no ictadmin@10.140.240.51 'hostname; uptime;'
+                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no ictadmin@10.140.240.51 'hostname; uptime;'
                     '''
                 }
             }
         }
     }
 }
+
