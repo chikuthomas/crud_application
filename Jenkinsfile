@@ -7,7 +7,7 @@ pipeline {
             steps {
                 // Inject the SSH private key from Jenkins credentials store
                 withCredentials([sshUserPrivateKey(credentialsId: 'ssh-ictadmin', keyFileVariable: 'SSH_KEY')]) {
-                    sh '''
+                    bat '''
                         ssh -i $SSH_KEY -o StrictHostKeyChecking=no ictadmin@10.140.240.51 'hostname; uptime;'
                     '''
                 }
