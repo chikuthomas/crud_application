@@ -11,7 +11,7 @@ pipeline {
                         name: 'remote-server',
                         host: '10.140.240.51',
                         user: 'ictadmin',
-                        credentialsId: 'ssh-ictadmin', // Use the ID of your Jenkins credentials
+                        credentialsId: 'ssh-ictadmin02', // Use the ID of your Jenkins credentials
                         port: 22,
                         allowAnyHosts: true
                     ]
