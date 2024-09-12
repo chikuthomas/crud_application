@@ -1,25 +1,23 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_SERVER_IP = '10.140.240.51'
+        DOCKER_USER = 'ictadmin'
+    }
+
     stages {
-        stage('Use SSH with Credentials') {
+        stage('Test SSH Connection') {
             steps {
                 script {
-                    echo 'Attempting to run SSH command...'
-
-                    def remote = [
-                        name: 'remote-server',
-                        host: '10.140.240.51',
-                        user: 'ictadmin',
-                        credentialsId: 'ssh-ictadmin', // Use the ID of your Jenkins credentials
-                        port: 22,
-                        allowAnyHosts: true
-                    ]
-
-                    // Run a command on the remote server using credentials
-                    sshCommand remote: remote, command: 'ls'
-
-                    echo 'SSH command executed successfully!'
+                    echo 'Testing SSH connection to Docker server...'
+                    
+                    // Use sshagent with the stored Jenkins credentials
+                    sshagent (credentials: ['ssh-ictadmin']) {
+                        sh """
+                        ssh -o StrictHostKeyChecking=no ${DOCKER_USER}@${DOCKER_SERVER_IP} "echo 'SSH connection successful'"
+                        """
+                    }
                 }
             }
         }
@@ -27,10 +25,10 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline completed successfully!'
+            echo 'SSH connection to Docker server succeeded.'
         }
         failure {
-            echo 'Pipeline failed. Check the logs for more details.'
+            echo 'Failed to SSH into Docker server.'
         }
     }
 }
